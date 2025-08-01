@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+<div class="container mt-5">
+    <h2 class="mb-4">Your Food Requests</h2>
+    <div class="row">
+        <% if (requests.length === 0) { %>
+            <div class="col-12">
+                <div class="alert alert-info">You haven’t requested any food yet.</div>
+            </div>
+        <% } else { %>
+            <% requests.forEach(reqItem => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <% if (reqItem.image) { %>
+                            <img src="/uploads/<%= reqItem.image %>" class="card-img-top" alt="<%= reqItem.title %>">
+                        <% } else { %>
+                            <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top">
+                        <% } %>
+                        <div class="card-body">
+                            <h5 class="card-title"><%= reqItem.title %></h5>
+                            <p class="card-text"><%= reqItem.description %></p>
+                            <p><strong>Pickup at:</strong> <%= reqItem.location %></p>
+                            <p><strong>Expires:</strong> <%= reqItem.expiry_time ? new Date(reqItem.expiry_time).toDateString() : 'No expiry date' %></p>
+                            <p><strong>Status:</strong>
+                                <% if (reqItem.status && reqItem.status.trim() === 'approved') { %>
+                                    <span class="badge bg-success">Approved</span>
+                                <% } else if (reqItem.status && reqItem.status.trim() === 'rejected') { %>
+                                    <span class="badge bg-danger">Rejected</span>
+                                <% } else { %>
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+</div>
+<%- include('../partials/footer') %>

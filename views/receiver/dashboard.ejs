@@ -1,0 +1,45 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">Available Food</h2>
+
+    <% if (food.length === 0) { %>
+        <div class="alert alert-warning">No food available right now.</div>
+    <% } else { %>
+        <div class="row">
+            <% food.forEach(item => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <% if (item.image) { %>
+                            <img src="/uploads/<%= item.image %>" class="card-img-top" style="height:200px; object-fit:cover;">
+                        <% } else { %>
+                            <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" style="height:200px; object-fit:cover;">
+                        <% } %>
+                        <div class="card-body">
+                            <h5 class="card-title text-success"><%= item.title %></h5>
+                            <p class="card-text"><%= item.description %></p>
+                            <p><strong>Quantity:</strong> <%= item.quantity %></p>
+                            <p><strong>Pickup:</strong> <%= item.location %></p>
+                           
+                            <p><strong>Expires:</strong> <%= item.expiry_time ? new Date(item.expiry_time).toLocaleString() : 'No expiry date' %></p>
+                            <div class="container mt-4 d-flex justify-content-end">
+    <a href="/receiver/requests" class="btn btn-info mb-3">View My Requests</a>
+</div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <form method="POST" action="/receiver/request/<%= item.id %>">
+                                <button type="submit" class="btn btn-primary w-100">Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>
+
+

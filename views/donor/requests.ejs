@@ -1,0 +1,26 @@
+<%- include('../partials/header') %>
+<h2>Requests for Your Food</h2>
+
+<% if (requests.length === 0) { %>
+    <div class="alert alert-warning">No requests yet.</div>
+<% } else { %>
+    <ul class="list-group">
+        <% requests.forEach(reqItem => { %>
+            <li class="list-group-item">
+                <strong><%= reqItem.food_title %></strong> — requested by <%= reqItem.receiver_name %> (<%= reqItem.receiver_email %>)
+                <br>
+                Status: <strong><%= reqItem.status %></strong> |
+                Requested on: <%= new Date(reqItem.created_at).toLocaleString() %>
+                <% if (reqItem.status === 'pending') { %>
+                    <form method="POST" action="/donor/requests/approve/<%= reqItem.id %>" style="display:inline;">
+                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    <form method="POST" action="/donor/requests/deny/<%= reqItem.id %>" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                    </form>
+                <% } %>
+            </li>
+        <% }) %>
+    </ul>
+<% } %>
+<%- include('../partials/footer') %>

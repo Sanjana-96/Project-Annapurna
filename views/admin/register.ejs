@@ -1,0 +1,31 @@
+<%- include('../partials/header') %>
+
+<div class="form-container">
+    <h2>Admin Registration</h2>
+    <form method="POST" action="/admin/register">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="text" name="secret" placeholder="Admin Secret Code" required>
+        <button type="submit">Register as Admin</button>
+    </form>
+</div>
+
+<style>
+.form-container {
+    width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.form-container input, .form-container button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+}
+</style>
+
+<%- include('../partials/footer') %>

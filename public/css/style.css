@@ -1,0 +1,115 @@
+/* General */
+body {
+    font-family: poppins,sans-serif;
+    background: #f9f9f9;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.navbar-nav .nav-link {
+    color: #ddd;
+    transition: 0.3s;
+}
+.navbar-nav .nav-link:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Hero Section */
+.hero {
+    background: url('/images/food-bg.jpg') center/cover no-repeat;
+    height: 90vh;
+    color :white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+.hero p {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+    font-weight:bold;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Status Badges */
+.badge {
+    font-size: 0.85rem;
+    padding: 0.5em 0.8em;
+    border-radius: 50px;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #28a745;
+    border: none;
+}
+.btn-primary:hover {
+    background: #218838;
+}
+
+/* Footer */
+footer {
+    background: #222;
+    color: #aaa;
+    padding: 20px 0;
+    text-align: center;
+}
+/* About Page Hero */
+.about-hero {
+    background: url('/images/about-hero.jpg') center/cover no-repeat;
+    height: 70vh;
+   
+    padding-top: 120px;
+}
+
+.about-hero h1 {
+    color: darkcyan; /* Dark grey for heading */
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.6); /* subtle shadow for readability */
+}
+.about-hero   p {
+    color: darkblue; /* Medium grey for tagline */
+    font-size: 1.2rem;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* Contact Section */
+.contact-section {
+    background: #f8f9fa;
+}
+/* trend chart */
+.chart-container {
+    width: 70%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}

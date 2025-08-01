@@ -1,0 +1,193 @@
+<%- include('../partials/header') %>
+<!-- statCards -->
+<div class="container-fluid mt-4 px-5">
+     <div class="stats-container">
+    <div class="stat-card">
+        <h3>Total FoodItems donated</h3>
+        <p><%= totalDonations %></p>
+    </div>
+    <div class="stat-card">
+        <h3>Total Requests received</h3>
+        <p><%= totalRequests %></p>
+    </div>
+    <div class="stat-card">
+        <h3>Approved Requests</h3>
+        <p><%= approvedRequests %></p>
+    </div>
+</div>
+
+<style>
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+        gap: 20px;
+    }
+    .stat-card {
+        flex: 1;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .stat-card h3 {
+        color: #2e7d32;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .stat-card p {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+<!-- pieChart Visualisation -->
+<div class="chart-container">
+    <h3>Requests by Status</h3>
+    <canvas id="statusChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const statusData = <%- statusData %>; // inject JSON safely
+     console.log(statusData);
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Approved', 'Pending', 'Rejected'],
+            datasets: [{
+                data: [statusData.approved, statusData.pending, statusData.rejected],
+                backgroundColor: ['#69d16f', '#e09538', '#d15249'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+</script>
+
+
+<style>
+.chart-container {
+    width: 400px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.chart-container h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+</style>
+
+ <!-- Donations OverTime -->
+
+ 
+    <h3>Donations Over Time</h3>
+    <canvas id="trendChart"></canvas>
+
+<script>
+    const trendLabels = <%- trendLabels %>;
+    const trendCounts = <%- trendCounts %>;
+
+    const trendCtx = document.getElementById('trendChart').getContext('2d');
+    new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: trendLabels,
+            datasets: [{
+                label: 'Donations',
+                data: trendCounts,
+                borderColor: '#2e7d32',
+                backgroundColor: 'rgba(46, 125, 50, 0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Donations' }, beginAtZero: true }
+            }
+        }
+    });
+</script>
+
+
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Your Food Listings</h2>
+        <a href="/donor/add" class="btn btn-success">+ Add New Food</a>
+        
+    </div>
+</div>
+    </div>
+
+  
+
+    <div class="row">
+        <% if (food.length === 0) { %>
+            <div class="col-12">
+                <div class="alert alert-info text-center">You haven’t added any food yet.</div>
+            </div>
+        <% } else { %>
+            <% food.forEach(item => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow h-100">
+                        <% if (item.image) { %>
+                            <img src="/uploads/<%= item.image %>" class="card-img-top" style="height:200px; object-fit:cover;">
+                        <% } %>
+                        <div class="card-body">
+                            <h5 class="card-title"><%= item.title %></h5>
+                            <p class="card-text"><%= item.description %></p>
+                            <p><strong>Quantity:</strong> <%= item.quantity %></p>
+                            <p><strong>Location:</strong> <%= item.location %></p>
+                            <p>
+                                <strong>Expires:</strong>
+                                <span class="badge bg-<%= item.expiry_time && new Date(item.expiry_time) > new Date() ? 'success' : 'danger' %>">
+                                    <%= item.expiry_time ? new Date(item.expiry_time).toDateString() : 'No expiry date' %>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="/donor/edit/<%= item.id %>" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="/donor/requests?food_id=<%= item.id %>" class="btn btn-info btn-sm">View Requests</a>
+
+                            <form method="POST" action="/donor/delete/<%= item.id %>" onsubmit="return confirm('Are you sure?')">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+        <!-- Requests Modal -->
+<div class="modal fade" id="requestsModal" tabindex="-1" aria-labelledby="requestsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="requestsModalLabel">Food Requests</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul id="requestsList" class="list-group"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

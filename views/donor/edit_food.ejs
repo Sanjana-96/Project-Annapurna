@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+<div class="card shadow-sm p-4">
+    <h2 class="mb-4 text-success">Edit Food Item</h2>
+    <form method="POST" action="/donor/edit/<%= item.id %>" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" value="<%= item.title %>" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control"><%= item.description %></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Quantity</label>
+            <input type="text" name="quantity" class="form-control" value="<%= item.quantity %>" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Pickup Location</label>
+            <input type="text" name="location" class="form-control" value="<%= item.location %>" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Expiry Date & Time</label>
+            <%
+                let expiryVal = item.expiry_time ? new Date(item.expiry_time).toISOString().slice(0,16) : '';
+            %>
+            <input type="datetime-local" name="expiry_time" class="form-control" value="<%= expiryVal %>" required>
+        </div>
+
+        <% if (item.image) { %>
+            <div class="mb-3">
+                <p><strong>Current Image:</strong></p>
+                <img src="/uploads/<%= item.image %>" class="img-thumbnail mb-2" width="150">
+            </div>
+        <% } %>
+
+        <div class="mb-3">
+            <label class="form-label">Upload New Image (Optional)</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Update Food Item</button>
+    </form>
+</div>
+<%- include('../partials/footer') %>
+
+

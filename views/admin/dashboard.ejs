@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+<h2>Admin Analytics</h2>
+
+<!-- Quick Stats -->
+<div class="stats-container">
+    <div class="stat-card"><h3>Total Users</h3><p><%= totalUsers %></p></div>
+    <div class="stat-card"><h3>Donors</h3><p><%= totalDonors %></p></div>
+    <div class="stat-card"><h3>Receivers</h3><p><%= totalReceivers %></p></div>
+    <div class="stat-card"><h3>Total Donations</h3><p><%= totalDonations %></p></div>
+    <div class="stat-card"><h3>Total Requests</h3><p><%= totalRequests %></p></div>
+</div>
+
+<!-- Charts -->
+<div class="chart-container">
+    <h3>Request Status Breakdown</h3>
+    <canvas id="statusChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3>Donations Over Time</h3>
+    <canvas id="trendChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3>Top 5 Locations</h3>
+    <canvas id="locationChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Pie Chart for Request Status
+    const statusData = <%- statusData %>;
+    new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Approved', 'Pending', 'Rejected'],
+            datasets: [{ data: [statusData.approved, statusData.pending, statusData.rejected], backgroundColor: ['#2e7d32','#f9a825','#c62828'] }]
+        }
+    });
+
+    // Line Chart for Donations Over Time
+    const trendLabels = <%- trendLabels %>;
+    const trendCounts = <%- trendCounts %>;
+    new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: { labels: trendLabels, datasets: [{ label: 'Donations', data: trendCounts, borderColor: '#2e7d32', fill: true, tension: 0.3 }] }
+    });
+
+    // Bar Chart for Top Locations
+    const locationLabels = <%- locationLabels %>;
+    const locationCounts = <%- locationCounts %>;
+    new Chart(document.getElementById('locationChart'), {
+        type: 'bar',
+        data: { labels: locationLabels, datasets: [{ label: 'Donations', data: locationCounts, backgroundColor: '#1976d2' }] }
+    });
+</script>
+
+<style>
+    .stats-container { display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+    .stat-card { flex: 1; min-width: 150px; background: #fff; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+    .stat-card h3 { font-size: 16px; color: #333; }
+    .stat-card p { font-size: 22px; font-weight: bold; color: #2e7d32; }
+    .chart-container { width: 80%; margin: 30px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; margin: 20px 0; }
+</style>
+
+<%- include('../partials/footer') %>
