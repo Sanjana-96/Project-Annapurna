@@ -17,8 +17,6 @@ const pool = new Pool({
     port: 5432,
 });
 
-const session = require('express-session');
-
 app.use(session({
     secret: process.env.SESSION_SECRET || 'someRandomSecret',
     resave: false,
