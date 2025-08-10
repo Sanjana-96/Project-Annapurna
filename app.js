@@ -15,6 +15,8 @@ const pool = new Pool({
     database: 'annapurna',
     password: 'Sanju@2004',
     port: process.env.DB_PORT,
+    connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
 app.use(session({
