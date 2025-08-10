@@ -11,10 +11,10 @@ const app = express();
 
 const pool = new Pool({
     user: 'postgres',
-    host: 'localhost',
+    host: process.env.DB_HOST,
     database: 'annapurna',
     password: 'Sanju@2004',
-    port: 5432,
+    port: process.env.DB_PORT,
 });
 
 app.use(session({
