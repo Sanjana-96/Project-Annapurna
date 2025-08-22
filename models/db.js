@@ -2,7 +2,7 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,  // ✅ use Render-provided URL
+      connectionString: process.env.DATABASE_URL||"postgresql://postgres:GVBDPceRMcCKieAeYBNLQpHCCFqtdULe@trolley.proxy.rlwy.net:51386/railway",  // ✅ use Render-provided URL
   ssl: {
     rejectUnauthorized: false,  // ✅ needed for Render
   },
