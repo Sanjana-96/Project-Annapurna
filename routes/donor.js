@@ -71,8 +71,6 @@ const donationTrends = await db.query(
 const trendLabels = donationTrends.rows.map(row => row.date);
 const trendCounts = donationTrends.rows.map(row => parseInt(row.count));
 
-
-
         res.render('donor/dashboard', { 
             food: food.rows,
          totalDonations: totalDonations.rows[0].count,
