@@ -4,46 +4,21 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const pgSession = require('connect-pg-simple')(session);
 const db = require('./models/db');  // ✅ reuse your db.js
-
 const app = express();
 
-// Session (only once!)
-// app.use(session({
-//     store: new pgSession({ pool: db }),
-//     secret: process.env.SESSION_SECRET || 'supersecretkey',
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         httpOnly: true,
-//         sameSite: 'lax',
-//         secure: process.env.NODE_ENV === 'production', // ✅ secure only in prod
-//         maxAge: 1000 * 60 * 60 // 1 hour
-//     }
-// }));const session = require('express-session');
-const pgSession = require('connect-pg-simple')(session);
-const pool = require('./models/db');
-
-app.use(
-  session({
-    store: new pgSession({
-      pool: pool,              // PostgreSQL connection
-      tableName: 'session'     // make sure it matches the created table
-    }),
-    secret: 'supersecret',     // change this in production
+Session (only once!)
+app.use(session({
+    store: new pgSession({ pool: db }),
+    secret: process.env.SESSION_SECRET || 'supersecretkey',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production', // ✅ secure only in prod
+        maxAge: 1000 * 60 * 60 // 1 hour
     }
-  })
-);
-
-// Make session available in EJS
-app.use((req, res, next) => {
-  res.locals.user = req.session.user || null;
-  console.log("Session user:", req.session.user);
-  next();
-});
+}));const session = require('express-session');
 
 
 // Middleware
