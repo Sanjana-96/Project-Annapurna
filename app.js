@@ -3,10 +3,11 @@ const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
 const pgSession = require('connect-pg-simple')(session);
-const db = require('./models/db');  // ✅ reuse your db.js
+const db = require('./models/db');  // ✅ PostgreSQL pool
+
 const app = express();
 
-// Session (only once!)
+// Session middleware (only once!)
 app.use(session({
     store: new pgSession({ pool: db }),
     secret: process.env.SESSION_SECRET || 'supersecretkey',
@@ -15,15 +16,14 @@ app.use(session({
     cookie: {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production', // ✅ secure only in prod
+        secure: process.env.NODE_ENV === 'production', // only secure in prod
         maxAge: 1000 * 60 * 60 // 1 hour
     }
-// }));const session = require('express-session');
-
+}));
 
 // Middleware
-app.use(express.json()); // ✅ parse JSON
-app.use(express.urlencoded({ extended: true })); // ✅ parse form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
@@ -50,16 +50,7 @@ app.use('/admin', require('./routes/admin'));
 app.use('/donor', require('./routes/donor'));
 app.use('/receiver', require('./routes/receiver'));
 
-// app.get('/', (req, res) => {
-//     if (req.session.user) {
-//         return res.redirect(
-//             req.session.user.role === 'donor'
-//                 ? '/donor/dashboard'
-//                 : '/receiver/dashboard'
-//         );
-//     }
-//     res.render('index');
-// });
+// Homepage redirect by role
 app.get('/', (req, res) => {
     if (req.session.user) {
         if (req.session.user.role === 'admin') {
@@ -73,8 +64,9 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-
 app.get('/about', (req, res) => res.render('about'));
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
