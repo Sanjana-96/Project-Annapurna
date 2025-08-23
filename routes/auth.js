@@ -33,6 +33,59 @@ router.get('/login', (req, res) => {
 });
 
 // Handle login
+// router.post('/login', async (req, res) => {
+//     const { email, password } = req.body;
+//     try {
+//         const result = await db.query('SELECT * FROM users WHERE email=$1', [email]);
+//         const user = result.rows[0];
+//         console.log("DB returned user:", user);
+
+//         if (!user) {
+//             req.flash('error', 'No user found with this email.');
+//             return res.redirect('/login');
+//         }
+
+//         const match = await bcrypt.compare(password, user.password);
+//         if (!match) {
+//             req.flash('error', 'Invalid password.');
+//             return res.redirect('/login');
+//         }
+
+//         // Save session (include contact_number)
+//         req.session.user = { 
+//             id: user.id, 
+//             name: user.username, 
+//             role: user.role, 
+//             contact_number: user.contact_number 
+//         };
+
+//         req.session.save(err => {
+//             if (err) {
+//                 console.error("Session save error:", err);
+//                 req.flash('error', 'Session error. Try again.');
+//                 return res.redirect('/login');
+//             }
+
+//             // Redirect based on role
+//             if (user.role === 'admin') {
+//                 return res.redirect('/admin/dashboard');
+//             } else if (user.role === 'donor') {
+//                 return res.redirect('/donor/dashboard');
+//             } else if (user.role === 'receiver') {
+//                 return res.redirect('/receiver/dashboard');
+//             } else {
+//                 req.flash('error', 'Invalid role.');
+//                 return res.redirect('/login');
+//             }
+//         });
+
+//     } catch (err) {
+//         console.error("Login error:", err);
+//         req.flash('error', 'Login failed.');
+//         res.redirect('/login');
+//     }
+// });
+// Handle login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -51,33 +104,29 @@ router.post('/login', async (req, res) => {
             return res.redirect('/login');
         }
 
-        // Save session (include contact_number)
-        req.session.user = { 
-            id: user.id, 
-            name: user.username, 
-            role: user.role, 
-            contact_number: user.contact_number 
+        // ✅ Save session (use consistent key names)
+        req.session.user = {
+            id: user.id,
+            username: user.username,   // <-- use "username" not "name"
+            email: user.email,
+            role: user.role,
+            contact_number: user.contact_number
         };
 
-        req.session.save(err => {
-            if (err) {
-                console.error("Session save error:", err);
-                req.flash('error', 'Session error. Try again.');
-                return res.redirect('/login');
-            }
+        console.log("✅ Logged in user saved in session:", req.session.user);
 
-            // Redirect based on role
-            if (user.role === 'admin') {
-                return res.redirect('/admin/dashboard');
-            } else if (user.role === 'donor') {
-                return res.redirect('/donor/dashboard');
-            } else if (user.role === 'receiver') {
-                return res.redirect('/receiver/dashboard');
-            } else {
-                req.flash('error', 'Invalid role.');
-                return res.redirect('/login');
-            }
-        });
+        // ✅ No need for req.session.save() unless you want callback
+        // Redirect based on role
+        if (user.role === 'admin') {
+            return res.redirect('/admin/dashboard');
+        } else if (user.role === 'donor') {
+            return res.redirect('/donor/dashboard');
+        } else if (user.role === 'receiver') {
+            return res.redirect('/receiver/dashboard');
+        } else {
+            req.flash('error', 'Invalid role.');
+            return res.redirect('/login');
+        }
 
     } catch (err) {
         console.error("Login error:", err);
