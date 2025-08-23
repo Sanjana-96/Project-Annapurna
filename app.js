@@ -50,16 +50,29 @@ app.use('/admin', require('./routes/admin'));
 app.use('/donor', require('./routes/donor'));
 app.use('/receiver', require('./routes/receiver'));
 
+// app.get('/', (req, res) => {
+//     if (req.session.user) {
+//         return res.redirect(
+//             req.session.user.role === 'donor'
+//                 ? '/donor/dashboard'
+//                 : '/receiver/dashboard'
+//         );
+//     }
+//     res.render('index');
+// });
 app.get('/', (req, res) => {
     if (req.session.user) {
-        return res.redirect(
-            req.session.user.role === 'donor'
-                ? '/donor/dashboard'
-                : '/receiver/dashboard'
-        );
+        if (req.session.user.role === 'admin') {
+            return res.redirect('/admin/dashboard');
+        } else if (req.session.user.role === 'donor') {
+            return res.redirect('/donor/dashboard');
+        } else if (req.session.user.role === 'receiver') {
+            return res.redirect('/receiver/dashboard');
+        }
     }
     res.render('index');
 });
+
 
 app.get('/about', (req, res) => res.render('about'));
 
