@@ -8,6 +8,21 @@ const db = require('./models/db');  // ✅ PostgreSQL pool
 const app = express();
 
 // Session middleware (only once!)
+// app.use(session({
+//     store: new pgSession({ pool: db }),
+//     secret: process.env.SESSION_SECRET || 'supersecretkey',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         httpOnly: true,
+//         sameSite: 'lax',
+//         secure: process.env.NODE_ENV === 'production', // only secure in prod
+//         maxAge: 1000 * 60 * 60 // 1 hour
+//     }
+// }));
+// Trust proxy for Railway/Heroku/etc.
+app.set('trust proxy', 1);
+
 app.use(session({
     store: new pgSession({ pool: db }),
     secret: process.env.SESSION_SECRET || 'supersecretkey',
@@ -16,10 +31,11 @@ app.use(session({
     cookie: {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production', // only secure in prod
+        secure: process.env.NODE_ENV === 'production', // secure only in prod
         maxAge: 1000 * 60 * 60 // 1 hour
     }
 }));
+
 
 // Middleware
 app.use(express.json());
