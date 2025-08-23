@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -11,13 +10,13 @@ router.get('/register', (req, res) => {
 
 // Handle register
 router.post('/register', async (req, res) => {
-    const { username, email, password, role, contact_number } = req.body;
+    const { username, email, password, role, contact } = req.body; // ✅ match EJS field (contact)
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         await db.query(
             'INSERT INTO users (username, email, password, role, contact_number) VALUES ($1, $2, $3, $4, $5)',
-            [username, email, hashedPassword, role, contact_number]
+            [username, email, hashedPassword, role, contact] // ✅ use contact here
         );
         req.flash('success', 'Registration successful. Please login.');
         res.redirect('/login');
@@ -52,7 +51,7 @@ router.post('/login', async (req, res) => {
             return res.redirect('/login');
         }
 
-        // Save session (include contact_number if needed)
+        // Save session (include contact_number)
         req.session.user = { 
             id: user.id, 
             name: user.username, 
@@ -80,11 +79,6 @@ router.post('/login', async (req, res) => {
             }
         });
 
-        console.log("Redirecting to:", 
-            user.role === 'donor' ? '/donor/dashboard' : 
-            user.role === 'receiver' ? '/receiver/dashboard' : '/admin/dashboard'
-        );
-
     } catch (err) {
         console.error("Login error:", err);
         req.flash('error', 'Login failed.');
@@ -100,4 +94,3 @@ router.get('/logout', (req, res) => {
 });
 
 module.exports = router;
-
