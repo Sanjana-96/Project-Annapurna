@@ -6,7 +6,7 @@ const pgSession = require('connect-pg-simple')(session);
 const db = require('./models/db');  // ✅ reuse your db.js
 const app = express();
 
-Session (only once!)
+// Session (only once!)
 app.use(session({
     store: new pgSession({ pool: db }),
     secret: process.env.SESSION_SECRET || 'supersecretkey',
