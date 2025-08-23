@@ -18,7 +18,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // ✅ secure only in prod
         maxAge: 1000 * 60 * 60 // 1 hour
     }
-}));const session = require('express-session');
+// }));const session = require('express-session');
 
 
 // Middleware
